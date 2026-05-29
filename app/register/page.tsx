@@ -35,6 +35,8 @@ export default function RegisterPage() {
     }, 1000);
   };
 
+  const [loading, setLoading] = useState(true);
+
   return (
     <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center">
       <div className="w-[400px] bg-[#121826] p-8 rounded-2xl">

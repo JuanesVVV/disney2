@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
@@ -30,6 +32,8 @@ export default function LoginPage() {
 
     router.push("/home");
   };
+
+const [loading, setLoading] = useState(true);
 
   return (
     <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center">

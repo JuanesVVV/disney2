@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 
 interface FavoriteCharacter {
   id: string;
@@ -24,11 +25,14 @@ export default function MVPPage() {
   const [favorites, setFavorites] =
     useState<FavoriteCharacter[]>([]);
 
-  const [message, setMessage] =
+  const [mensaje, setMensaje] =
     useState<string | null>(null);
 
   const [loading, setLoading] =
     useState<boolean>(true);
+
+    const [message, setMessage] = useState<string | null>(null);
+    const router = useRouter();
 
   // -----------------------------------
   // CARGAR PERSONAJES DISNEY
@@ -58,7 +62,7 @@ export default function MVPPage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setMessage("Debes iniciar sesión");
+      setMensaje("Debes iniciar sesión");
       setLoading(false);
       return;
     }
@@ -89,7 +93,7 @@ export default function MVPPage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setMessage(
+      setMensaje(
         "Debes iniciar sesión"
       );
       return;
@@ -111,17 +115,32 @@ export default function MVPPage() {
       ]);
 
     if (error) {
-      setMessage(
+      setMensaje(
         "Error al guardar personaje"
       );
     } else {
-      setMessage(
+      setMensaje(
         "Personaje guardado"
       );
 
       fetchFavorites();
     }
   };
+
+  //validacion
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        // ❌ No hay usuario logueado → redirige a login
+        router.push("/login");
+      } else {
+        // ✅ Usuario logueado, seguimos con la página
+        setLoading(false);
+      }
+    };
+    checkUser();
+  }, [router]);
 
   // -----------------------------------
   // INICIO
